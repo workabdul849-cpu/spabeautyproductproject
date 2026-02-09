@@ -8,7 +8,9 @@ type Service = {
   name: string;
   description: string;
   price: number;
-  duration_minutes: number;
+  duration: string;
+  category: string;
+  image_url?: string;
 };
 
 export default function Services() {
@@ -18,10 +20,18 @@ export default function Services() {
   useEffect(() => {
     apiGet<Service[]>("/services")
       .then(setServices)
+      .catch(err => {
+        console.error('Failed to load services:', err);
+        setServices([]);
+      })
       .finally(() => setLoading(false));
   }, []);
 
   if (loading) return <p className="p-6">Loading services…</p>;
+  
+  if (services.length === 0) {
+    return <p className="p-6 text-center text-brown-600">No services available</p>;
+  }
 
   return (
     <div className="p-6 grid md:grid-cols-3 gap-6">
@@ -30,7 +40,7 @@ export default function Services() {
           <h2 className="font-semibold text-lg">{s.name}</h2>
           <p className="text-sm text-gray-600 mt-2">{s.description}</p>
           <p className="mt-2 text-sm">
-            {s.duration_minutes} mins · {formatUSD(s.price)}
+            {s.duration} · {formatUSD(Number(s.price))}
           </p>
           <Link
             to={`/services/${s.id}`}

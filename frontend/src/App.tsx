@@ -76,9 +76,6 @@ function App() {
                 <Route path="/returns" element={<Returns />} />
                 <Route path="/accessibility" element={<Accessibility />} />
 
-                {/* Legacy demo admin (kept for reference). */}
-                <Route path="/admin" element={<Admin />} />
-
                 {/* Real admin panel */}
                 <Route
                   path="/admin"
