@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: rjbl_postgres
+    environment:
+      POSTGRES_USER: rjbl_user
+      POSTGRES_PASSWORD: rjbl_password_local
+      POSTGRES_DB: rjbl_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rjbl_user -d rjbl_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - rjbl-network
+
+  # Backend Express API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: rjbl_backend
+    environment:
+      NODE_ENV: development
+      PORT: 4000
+      DATABASE_URL: postgresql://rjbl_user:rjbl_password_local@postgres:5432/rjbl_db
+      JWT_SECRET: local_dev_super_secret_jwt_key_change_in_production
+      CORS_ORIGINS: http://localhost:5173,http://localhost:3000,http://frontend:3000
+      STRIPE_SECRET_KEY: sk_test_local_development_key
+      STRIPE_SUCCESS_URL: http://localhost:5173/payment/success?session_id={CHECKOUT_SESSION_ID}
+      STRIPE_CANCEL_URL: http://localhost:5173/payment/cancel
+    ports:
+      - "4000:4000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend/src:/app/src
+    networks:
+      - rjbl-network
+    command: npm run dev
+
+  # Frontend React App
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: rjbl_frontend
+    environment:
+      VITE_API_BASE_URL: http://backend:4000
+      NODE_ENV: development
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/index.html:/app/index.html
+    networks:
+      - rjbl-network
+    command: npm run dev -- --host 0.0.0.0
+
+volumes:
+  postgres_data:
+
+networks:
+  rjbl-network:
+    driver: bridge
