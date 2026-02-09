@@ -20,12 +20,17 @@ export default function AdminOverview() {
         setLoading(true);
         setError(null);
 
-        const [svc, prod, st, cl] = await Promise.all([
-          hasPerm('services', 'read') ? apiGet<any[]>('/services') : Promise.resolve([]),
-          hasPerm('products', 'read') ? apiGet<any[]>('/products') : Promise.resolve([]),
-          hasPerm('staff', 'read') ? apiGet<any[]>('/staff') : Promise.resolve([]),
-          hasPerm('clients', 'read') ? apiGet<any[]>('/clients') : Promise.resolve([]),
+        const results = await Promise.allSettled([
+          apiGet<any[]>('/services').catch(() => []),
+          apiGet<any[]>('/products').catch(() => []),
+          apiGet<any[]>('/staff').catch(() => []),
+          apiGet<any[]>('/clients').catch(() => []),
         ]);
+
+        const svc = results[0].status === 'fulfilled' ? results[0].value : [];
+        const prod = results[1].status === 'fulfilled' ? results[1].value : [];
+        const st = results[2].status === 'fulfilled' ? results[2].value : [];
+        const cl = results[3].status === 'fulfilled' ? results[3].value : [];
 
         setStats({
           services: svc.length,
@@ -39,7 +44,7 @@ export default function AdminOverview() {
         setLoading(false);
       }
     })();
-  }, [hasPerm]);
+  }, []);
 
   return (
     <div className="space-y-6">
