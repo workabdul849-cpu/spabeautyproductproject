@@ -1,11 +1,10 @@
-import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 
 // Guards admin/staff routes. This is NOT a security boundary (backend is),
 // but it prevents accidental UI access and improves UX.
 
-export default function AdminRoute({ children }: { children: React.JSX.Element }) {
+export default function AdminRoute({ children }: { children: JSX.Element }) {
   const { isAuthenticated, user } = useAuth();
   const location = useLocation();
 
