@@ -1,3 +1,4 @@
+import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 
@@ -8,7 +9,7 @@ export default function RequirePerm({
 }: {
   moduleKey: string;
   action: 'read' | 'write';
-  children: JSX.Element;
+  children: React.JSX.Element;
 }) {
   const { user, hasPerm } = useAuth();
 

@@ -115,11 +115,11 @@ export default function Profile() {
                 <h3 className="font-serif text-xl text-brown-800 mb-4">Next Appointment</h3>
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium text-brown-800">{upcomingBookings[0].serviceName}</p>
+                    <p className="font-medium text-brown-800">{upcomingBookings[0].service_name}</p>
                     <p className="text-brown-600 text-sm">
                       {upcomingBookings[0].date} at {upcomingBookings[0].time}
                     </p>
-                    <p className="text-brown-500 text-sm">with {upcomingBookings[0].staffName}</p>
+                    <p className="text-brown-500 text-sm">with {upcomingBookings[0].staff_name}</p>
                   </div>
                   <Link to="/book">
                     <Button variant="outline" className="rounded-full border-brown-600 text-brown-800">
@@ -153,19 +153,19 @@ export default function Profile() {
                     <div key={booking.id} className="bg-white rounded-2xl p-6 shadow-card">
                       <div className="flex items-start justify-between">
                         <div>
-                          <p className="font-medium text-brown-800">{booking.serviceName}</p>
+                          <p className="font-medium text-brown-800">{booking.service_name}</p>
                           <p className="text-brown-600 text-sm">{booking.date} at {booking.time}</p>
-                          <p className="text-brown-500 text-sm">with {booking.staffName}</p>
-                          {booking.addOns && (
+                          <p className="text-brown-500 text-sm">with {booking.staff_name}</p>
+                          {booking.add_ons && (
                             <p className="text-brown-500 text-sm mt-1">
-                              Add-ons: {booking.addOns.join(', ')}
+                              Add-ons: {booking.add_ons.join(', ')}
                             </p>
                           )}
                         </div>
                         <div className="text-right">
-                          <p className="font-medium text-brown-800">USD {booking.price}</p>
+                          <p className="font-medium text-brown-800">USD {String(booking.price)}</p>
                           <button
-                            onClick={() => cancelBooking(booking.id)}
+                            onClick={() => cancelBooking(String(booking.id))}
                             className="text-red-500 text-sm hover:underline mt-2"
                           >
                             Cancel
@@ -191,12 +191,12 @@ export default function Profile() {
                     <div key={booking.id} className="bg-white rounded-2xl p-6 shadow-card">
                       <div className="flex items-start justify-between">
                         <div>
-                          <p className="font-medium text-brown-800">{booking.serviceName}</p>
+                          <p className="font-medium text-brown-800">{booking.service_name}</p>
                           <p className="text-brown-600 text-sm">{booking.date} at {booking.time}</p>
-                          <p className="text-brown-500 text-sm">with {booking.staffName}</p>
+                          <p className="text-brown-500 text-sm">with {booking.staff_name}</p>
                         </div>
                         <div className="text-right">
-                          <p className="font-medium text-brown-800">USD {booking.price}</p>
+                          <p className="font-medium text-brown-800">USD {String(booking.price)}</p>
                           {booking.rating ? (
                             <div className="flex items-center justify-end gap-1 mt-2">
                               {[...Array(5)].map((_, i) => (
@@ -208,7 +208,7 @@ export default function Profile() {
                             </div>
                           ) : (
                             <button
-                              onClick={() => setFeedbackModal({ open: true, bookingId: booking.id })}
+                              onClick={() => setFeedbackModal({ open: true, bookingId: String(booking.id) })}
                               className="text-brown-600 text-sm hover:underline mt-2"
                             >
                               Leave Review
