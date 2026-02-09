@@ -45,7 +45,7 @@ export default function Profile() {
 
   const handleSubmitFeedback = () => {
     if (feedbackModal) {
-      submitFeedback(feedbackModal.bookingId, rating, feedbackText);
+      submitFeedback(Number(feedbackModal.bookingId), rating, feedbackText);
       setFeedbackModal(null);
       setRating(5);
       setFeedbackText('');
@@ -163,9 +163,9 @@ export default function Profile() {
                           )}
                         </div>
                         <div className="text-right">
-                          <p className="font-medium text-brown-800">USD {String(booking.price)}</p>
+                          <p className="font-medium text-brown-800">USD {booking.price}</p>
                           <button
-                            onClick={() => cancelBooking(String(booking.id))}
+                            onClick={() => cancelBooking(booking.id)}
                             className="text-red-500 text-sm hover:underline mt-2"
                           >
                             Cancel
@@ -196,7 +196,7 @@ export default function Profile() {
                           <p className="text-brown-500 text-sm">with {booking.staff_name}</p>
                         </div>
                         <div className="text-right">
-                          <p className="font-medium text-brown-800">USD {String(booking.price)}</p>
+                          <p className="font-medium text-brown-800">USD {booking.price}</p>
                           {booking.rating ? (
                             <div className="flex items-center justify-end gap-1 mt-2">
                               {[...Array(5)].map((_, i) => (

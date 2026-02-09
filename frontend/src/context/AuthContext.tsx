@@ -29,6 +29,7 @@ export interface Booking {
   price: number;
   staff_id?: number;
   staff_name?: string;
+  add_ons?: string[];
 }
 
 type AuthContextType = {
